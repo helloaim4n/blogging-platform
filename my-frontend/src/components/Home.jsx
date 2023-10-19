@@ -8,7 +8,7 @@ function Home() {
         This is a platform where you can create and share your own blogs.
       </p>
       <a
-        href="/blog"
+        href="/blogs"
         className="px-4 py-2 font-semibold text-white bg-blue-500 rounded hover:bg-blue-700"
       >
         Check out the latest blogs

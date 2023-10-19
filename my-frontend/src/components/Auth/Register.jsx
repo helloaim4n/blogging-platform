@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -16,8 +17,18 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(formData);
+
+    // Send the registration data to the backend
+    axios
+      .post("/register", formData) // Replace "/api/register" with the actual registration endpoint
+      .then((response) => {
+        // Handle a successful registration response
+        console.log("Registration successful:", response.data);
+      })
+      .catch((error) => {
+        // Handle registration error
+        console.error("Registration failed:", error);
+      });
   };
 
   return (

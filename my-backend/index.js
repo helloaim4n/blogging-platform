@@ -36,8 +36,13 @@ app.use(cors());
 // import AuthRoutes from "./src/routes/auth.js"; // Import your authentication routes
 // app.use("/api", BlogRoutes);
 // app.use("/api/auth", AuthRoutes);
-app.get("/api/blog", (req, res) => {
+app.get("/blogs", (req, res) => {
   BlogModel.find()
+    .then((blogpost) => res.json(blogpost))
+    .catch((err) => res.json(err));
+});
+app.get("/blogs/:id", (req, res) => {
+  BlogModel.findById(req.params.id)
     .then((blogpost) => res.json(blogpost))
     .catch((err) => res.json(err));
 });

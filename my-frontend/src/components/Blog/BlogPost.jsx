@@ -1,29 +1,44 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 
 function BlogPost() {
-  const [blogPost, setBlogPost] = useState(null);
   const { id } = useParams();
+  const [post, setPost] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/blog/${id}`)
-      .then((response) => response.json())
-      .then((data) => setBlogPost(data))
-      .catch((error) => console.error("Error:", error));
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:5000/blogs/${id}`);
+        setPost(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
   }, [id]);
 
-  if (!blogPost) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">{blogPost.title}</h2>
-      <p className="text-gray-600">{blogPost.content}</p>
-      <div className="mt-4 text-sm text-gray-500">
-        <p>Author: {blogPost.author}</p>
-        <p>Published on: {blogPost.publishedDate}</p>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-2">
+      {post ? (
+        <div className="max-w-md w-full bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <h2 className="mb-4 text-2xl font-bold">{post.title}</h2>
+          <p className="mb-2 text-gray-700">{post.content}</p>
+          <div className="mb-4 text-sm text-gray-500">
+            <p>Author: {post.author}</p>
+            <p>Published on: {post.publishedDate}</p>
+          </div>
+          <Link
+            to={`/edits/${id}`}
+            className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Edit
+          </Link>
+        </div>
+      ) : (
+        <p className="text-center">Loading...</p>
+      )}
     </div>
   );
 }

@@ -36,15 +36,51 @@ app.use(cors());
 // import AuthRoutes from "./src/routes/auth.js"; // Import your authentication routes
 // app.use("/api", BlogRoutes);
 // app.use("/api/auth", AuthRoutes);
+
+//Create a new blog post
+app.post("/blogs", (req, rest) => {
+  const blogpost = new BlogModel(req.body);
+  blogpost
+    .save()
+    .then((data) => {
+      rest.json(data);
+    })
+    .catch((error) => {
+      rest.json(error);
+    });
+});
+
+//Read all blog posts
 app.get("/blogs", (req, res) => {
   BlogModel.find()
     .then((blogpost) => res.json(blogpost))
     .catch((err) => res.json(err));
 });
+
+//Read a single blog post
 app.get("/blogs/:id", (req, res) => {
   BlogModel.findById(req.params.id)
     .then((blogpost) => res.json(blogpost))
     .catch((err) => res.json(err));
+});
+
+//Update a single blog post
+app.put("/blogs/:id", async (req, res) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+
+  try {
+    const result = await BlogModel.updateOne(
+      { _id: id },
+      { $set: updatedData }
+    );
+
+    res.json({ message: "Blog post updated successfully" });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({ message: "Something went wrong" });
+  }
 });
 
 // Start your Express server
